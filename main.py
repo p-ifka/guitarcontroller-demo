@@ -5,14 +5,18 @@ import pygame
 import math
 # pygame setup
 pygame.init()
+
+#GAME VARIABLES
 screen = pygame.display.set_mode((300, 600))
 clock = pygame.time.Clock()
 running = True
 dt = 0
+background = pygame.image.load("assets/bg.png")
 
 ## NOTE VARIABLES
 noteSpeed = 100
 noteHoldTime = 5
+noteDeadzone = 25
 
 
 
@@ -33,9 +37,10 @@ bX = 225
 bY = 0
 bHeld = False
 bTimout = 0
+
+
+## LOOP
 while running:
-    # poll for events
-    # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -43,8 +48,9 @@ while running:
     
     aY += noteSpeed * dt
     bY +=  noteSpeed * dt
-    # fill the screen with a color to wipe away anything from last frame
-    screen.fill("black")
+
+    ## RENDERING
+    screen.blit(background, (0,0))
     aBlock(aX, aY)
     bBlock(bX, bY)
 
@@ -54,7 +60,7 @@ while running:
     if(bHeld == True):
         pygame.draw.circle(screen, "red", pygame.Vector2(300, 500), 49)
 
-    if(abs(aY - 500) <= 30):
+    if(abs(aY - 500) <= noteDeadzone):
         #print("A NOTE IN ZONE")
         if(aHeld == True):
             #print("A NOTE HIT")
@@ -66,7 +72,7 @@ while running:
             bBlockImage = pygame.image.load("assets/BLANK.png")
 
 
-
+    ## KEYBINDS
     keys = pygame.key.get_pressed()
     if keys[pygame.K_a]:
         if aTimout >= noteHoldTime:
